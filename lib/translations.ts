@@ -41,9 +41,9 @@ export const translations: Translations = {
   },
   fr: {
     // Page d'accueil
-    "todaysPhrase": "Phrase du Jour",
-    "yourResponse": "Votre Réponse",
-    "writePlaceholder": "Écrivez vos réflexions sur la phrase du jour...",
+    "todaysPhrase": "Ma petite question du jour",
+    "yourResponse": "Votre réponse",
+    "writePlaceholder": "Écrivez vos réflexions sur la question du jour...",
     "submitResponse": "Soumettre la réponse",
     "submitting": "Soumission en cours...",
     "viewCalendar": "Voir le calendrier",
@@ -53,7 +53,7 @@ export const translations: Translations = {
     // Calendrier
     "calendar": "Calendrier",
     "today": "Aujourd'hui",
-    "dailyPhrase": "Phrase du Jour",
+    "dailyPhrase": "Ma petite question du jour",
     "yourResponseCal": "Votre réponse",
     "noResponse": "Pas de réponse pour cette date.",
     "addResponse": "Ajouter une réponse",

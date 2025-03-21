@@ -39,7 +39,7 @@ export default function Navbar() {
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
                 <span className="text-xl font-bold text-blue-600">
-                  {locale === 'fr' ? 'Phrase Quotidienne' : 'Daily Phrase'}
+                  {locale === 'fr' ? 'Ma petite question' : 'My little question'}
                 </span>
               </Link>
             </div>
@@ -60,7 +60,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
               <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                {locale === 'fr' ? 'Phrase Quotidienne' : 'Daily Phrase'}
+                {locale === 'fr' ? 'Ma petite question' : 'My little question'}
               </span>
             </Link>
           </div>

@@ -23,8 +23,13 @@ export default function CalendarPage() {
     
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
-    const start = format(monthStart, "yyyy-MM-dd");
-    const end = format(monthEnd, "yyyy-MM-dd");
+    
+    // Get the actual date range displayed in the calendar grid
+    const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
+    const calendarEnd = addDays(startOfWeek(monthEnd, { weekStartsOn: 0 }), 6);
+    
+    const start = format(calendarStart, "yyyy-MM-dd");
+    const end = format(calendarEnd, "yyyy-MM-dd");
 
     const apiUrl = `/api/calendar?start=${start}&end=${end}`;
     console.log("Fetching calendar data from:", apiUrl);
