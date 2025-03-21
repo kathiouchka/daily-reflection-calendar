@@ -1,5 +1,5 @@
 {
-    "name": "phrase-of-the-day",
+    "name": "mapetitequestion",
     "version": "1.0.0",
     "private": true,
     "prisma": {
