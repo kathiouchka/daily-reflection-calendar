@@ -9,20 +9,20 @@ export default function LanguageSwitcher() {
     <div className="flex items-center space-x-2">
       <button
         onClick={() => setLocale('fr')}
-        className={`px-2 py-1 text-xs rounded-md ${
+        className={`text-[14px] font-medium px-2 py-1 rounded-md transition-colors duration-200 ${
           locale === 'fr' 
-            ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200' 
-            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+            ? 'text-gray-900 dark:text-white bg-gray-100/50 dark:bg-gray-700/50' 
+            : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
         }`}
       >
         FR
       </button>
       <button
         onClick={() => setLocale('en')}
-        className={`px-2 py-1 text-xs rounded-md ${
+        className={`text-[14px] font-medium px-2 py-1 rounded-md transition-colors duration-200 ${
           locale === 'en' 
-            ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200' 
-            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+            ? 'text-gray-900 dark:text-white bg-gray-100/50 dark:bg-gray-700/50' 
+            : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
         }`}
       >
         EN

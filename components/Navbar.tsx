@@ -33,17 +33,17 @@ export default function Navbar() {
   // Don't render anything theme-related until mounted
   if (!mounted) {
     return (
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="bg-white/80 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
-                <span className="text-xl font-bold text-blue-600">
+                <span className="text-xl font-medium memory-title text-indigo-600 dark:text-indigo-400">
                   {locale === 'fr' ? 'Ma petite question' : 'My little question'}
                 </span>
               </Link>
             </div>
-            <div className="flex items-center space-x-4 flex-shrink-0 whitespace-nowrap overflow-x-auto md:overflow-visible">
+            <div className="flex items-center space-x-4">
               {/* Placeholder for theme toggle */}
               <div className="w-9 h-9"></div>
             </div>
@@ -54,33 +54,32 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                {locale === 'fr' ? 'Ma petite question' : 'My little question'}
-              </span>
-            </Link>
-          </div>
+    <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/30 dark:border-slate-700/30 sticky top-0 z-10">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        <div className="flex justify-between items-center h-16">
+          <Link href="/" className="flex items-center">
+            <span className="text-xl font-medium memory-title text-indigo-600 dark:text-indigo-400">
+              {locale === 'fr' ? 'Ma petite question' : 'My little question'}
+            </span>
+          </Link>
           
-          <div className="flex items-center space-x-4 flex-shrink-0 whitespace-nowrap overflow-x-auto md:overflow-visible">
+          <div className="flex items-center space-x-6">
             {session ? (
-              <div className="flex items-center space-x-4">
-                <Link href="/calendar" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+              <>
+                <Link 
+                  href="/calendar" 
+                  className="text-[15px] font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                >
                   {t('calendar')}
                 </Link>
                 
-                <div className="relative">
-                  <button 
-                    onClick={() => signOut()}
-                    className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-                  >
-                    {t('signOut')}
-                  </button>
-                </div>
-              </div>
+                <button 
+                  onClick={() => signOut()}
+                  className="text-[15px] font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                >
+                  {t('signOut')}
+                </button>
+              </>
             ) : (
               <LoginButton />
             )}
@@ -89,7 +88,7 @@ export default function Navbar() {
             
             <button 
               onClick={toggleDarkMode}
-              className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-2 rounded-full bg-slate-100/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 hover:bg-indigo-100/70 dark:hover:bg-indigo-900/30 transition-all duration-200"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (

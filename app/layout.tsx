@@ -7,23 +7,23 @@ import SessionDebug from '@/components/Sessiondebug';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Daily Phrase',
-  description: 'A daily phrase app with calendar view',
+  title: 'Ma petite question',
+  description: 'Une application pour écrire des souvenirs quotidiens',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex flex-col`}>
+      <body className={`${inter.className} bg-gradient-to-br from-sky-50 to-indigo-50 dark:from-slate-900 dark:to-indigo-950 text-slate-700 dark:text-slate-200 min-h-screen flex flex-col`}>
         <Providers>
           <Navbar />
-          <main className="flex-grow flex items-center justify-center py-8 px-4">
-            <div className="w-full max-w-7xl">
+          <main className="flex-grow flex items-center justify-center py-12 px-6">
+            <div className="w-full max-w-5xl">
               {children}
             </div>
           </main>
-          <footer className="py-4 px-6 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800">
-            <p>Daily Phrase App — Reflect on something new every day</p>
+          <footer className="py-6 px-8 text-center text-sm text-slate-500 dark:text-slate-400">
+            <p>Ma petite question — Capturez vos souvenirs précieux chaque jour</p>
           </footer>
           {process.env.NODE_ENV === 'development' && <SessionDebug />}
         </Providers>

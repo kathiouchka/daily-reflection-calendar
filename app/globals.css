@@ -2,10 +2,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
 
 html {
   font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* Dark mode support */
@@ -22,7 +27,7 @@ html {
 }
 
 .calendar-fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 /* Form submission feedback animations */
@@ -33,25 +38,30 @@ html {
 }
 
 .success-message {
-  animation: successPulse 0.5s ease-in-out;
+  animation: successPulse 0.6s ease-in-out;
 }
 
 /* Button hover effects */
 .btn-primary {
-  @apply py-2.5 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 
-    disabled:bg-blue-400 dark:disabled:bg-blue-500 text-white rounded-md transition-all
-    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
-    transform hover:-translate-y-0.5 active:translate-y-0;
+  @apply py-2.5 px-5 bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500 
+    disabled:bg-indigo-400 dark:disabled:bg-indigo-500 text-white rounded-lg transition-all
+    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
+    transform hover:-translate-y-0.5 active:translate-y-0 shadow-md hover:shadow-lg;
 }
 
 /* Card hover effects */
 .card-hover {
-  @apply transition-all duration-300 hover:shadow-lg;
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Memory card styles */
+.memory-card {
+  @apply bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg transition-all p-6 border border-slate-100 dark:border-slate-700;
 }
 
 /* Textarea focus animation */
 .textarea-focus {
-  @apply transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  @apply transition-all duration-300 focus:ring-2 focus:ring-indigo-400 focus:border-transparent rounded-lg p-4 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm;
 }
 
 /* Confetti animation */
@@ -59,6 +69,28 @@ html {
   to {
     transform: translateY(100vh) rotate(360deg);
   }
+}
+
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: fall 3s linear forwards;
+}
+
+/* Calendar day styles */
+.calendar-day {
+  @apply transition-all hover:bg-indigo-100 dark:hover:bg-indigo-900/30 rounded-full aspect-square flex items-center justify-center relative;
+}
+
+.calendar-day.has-entry {
+  @apply bg-gradient-to-br from-teal-400/80 to-indigo-400/80 text-white shadow-sm;
+}
+
+/* Custom header font for titles */
+.memory-title {
+  font-family: 'Lora', serif;
 }
 
 /* You can add global overrides or custom styles here if needed */

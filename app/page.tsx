@@ -164,10 +164,10 @@ export default function HomePage() {
     console.log('Session loading state:', { status });
     
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="animate-pulse text-gray-600 dark:text-gray-300">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-slate-600 dark:text-slate-300">
           <div className="flex flex-col items-center">
-            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p>Loading...</p>
           </div>
         </div>
@@ -178,20 +178,20 @@ export default function HomePage() {
   // Not logged in state
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-        <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-          <div className="p-6">
-            <h1 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Daily Phrase</h1>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="w-full max-w-lg memory-card bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-soft-lg overflow-hidden border border-slate-100 dark:border-slate-700">
+          <div className="p-8">
+            <h1 className="text-2xl font-bold memory-title text-indigo-600 dark:text-indigo-400 mb-4">Ma petite question</h1>
             
-            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600">
-              <p className="text-gray-800 dark:text-gray-200 italic">
-                {phrase || 'Loading phrase...'}
+            <div className="mb-6 p-5 bg-journal-paper dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600 shadow-inner">
+              <p className="text-slate-700 dark:text-slate-200 italic font-serif">
+                {phrase || 'Chargement de la question du jour...'}
               </p>
             </div>
             
             <div className="text-center py-6">
-              <p className="mb-4 text-gray-600 dark:text-gray-300">
-                Please sign in to record your response and view your calendar.
+              <p className="mb-5 text-slate-600 dark:text-slate-300">
+                Connectez-vous pour noter vos souvenirs et consulter votre calendrier.
               </p>
               <LoginButton />
             </div>
@@ -201,29 +201,46 @@ export default function HomePage() {
     );
   }
 
-  // Main content for logged-in users
+  // Logged in state - Response form
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
-        <div className="p-6">
-          <h1 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
-            <span className="bg-blue-100 dark:bg-blue-900 p-2 rounded-full mr-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-            </span>
-            {t('todaysPhrase')}
+    <div className="min-h-screen pt-4 pb-12">
+      <div className="w-full max-w-2xl mx-auto">
+        <div className="memory-card mb-8">
+          <h1 className="text-2xl font-bold memory-title text-indigo-600 dark:text-indigo-400 mb-6">
+            {t('todaysQuestion')}
           </h1>
-          
-          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600">
-            <p className="text-gray-800 dark:text-gray-200 italic">
-              {phrase || 'Loading phrase...'}
+
+          <div className="mb-6 p-5 bg-journal-paper dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600 shadow-inner">
+            <p className="text-xl text-slate-700 dark:text-slate-200 italic font-serif">
+              {phrase || t('loadingPhrase')}
             </p>
           </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
+
+          {successMessage && (
+            <div className="success-message mb-6 p-4 bg-pastel-green dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-lg">
+              <p className="flex items-center">
+                <svg className="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                {successMessage}
+              </p>
+            </div>
+          )}
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 rounded-lg">
+              <p className="flex items-center">
+                <svg className="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {error}
+              </p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="response" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="response" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 {t('yourResponse')}
               </label>
               <textarea
@@ -231,46 +248,45 @@ export default function HomePage() {
                 value={response}
                 onChange={(e) => setResponse(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={t('writePlaceholder')}
-                className="w-full p-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 dark:text-white placeholder-gray-400 h-32 resize-none"
-                maxLength={1000}
+                placeholder={t('writeYourThoughts')}
+                rows={6}
+                className="w-full textarea-focus border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 resize-none"
+                data-gramm="false"
               />
-              <div className="text-xs text-gray-500 dark:text-gray-400 text-right mt-1">
-                {response.length}/{1000} {t('characters')}
-              </div>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                {t('shiftEnterToSubmit')}
+              </p>
             </div>
             
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-2.5 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-blue-400 dark:disabled:bg-blue-500 text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-            >
-              {isSubmitting ? t('submitting') : t('submitResponse')}
-            </button>
-            
-            {successMessage && (
-              <div className="text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 p-2 rounded-md border border-green-100 dark:border-green-800 text-center">
-                {successMessage}
-              </div>
-            )}
-            
-            {error && (
-              <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 p-2 rounded-md border border-red-100 dark:border-red-800 text-center">
-                {error}
-              </div>
-            )}
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                disabled={isSubmitting || !response.trim()}
+                className="btn-primary"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {t('submitting')}
+                  </>
+                ) : t('submit')}
+              </button>
+            </div>
           </form>
-          
-          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
+
+          <div className="mt-8 text-center">
             <Link 
               href="/calendar" 
               onClick={navigateToCalendar}
-              className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium flex items-center justify-center space-x-1"
             >
-              <span>{t('viewCalendar')}</span>
-              <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
               </svg>
+              <span>{t('viewCalendar')}</span>
             </Link>
           </div>
         </div>
