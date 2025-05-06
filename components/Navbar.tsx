@@ -38,8 +38,8 @@ export default function Navbar() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
-                <span className="text-xl font-medium memory-title text-indigo-600 dark:text-indigo-400">
-                  {locale === 'fr' ? 'Ma petite question' : 'My little question'}
+                <span className="font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-indigo-600 dark:text-indigo-400 select-none">
+                  {locale === 'fr' ? 'MPQ' : 'MLQ'}
                 </span>
               </Link>
             </div>
@@ -57,35 +57,49 @@ export default function Navbar() {
     <nav className="bg-journal-paper dark:bg-slate-900 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10 transition-colors duration-200">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center">
-            <span className="text-xl font-medium memory-title text-indigo-600 dark:text-indigo-400">
-              {locale === 'fr' ? 'Ma petite question' : 'My little question'}
-            </span>
+          <Link href="/" className="flex items-center" aria-label="Accueil">
+            {/* Logo SVG stylisé */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 40 40"
+              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-indigo-600 dark:text-indigo-400 mr-2"
+              fill="none"
+            >
+              <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="3" fill="white" className="dark:fill-slate-800" />
+              <text x="50%" y="56%" textAnchor="middle" fontFamily="Permanent Marker, cursive" fontSize="18" fill="currentColor" dy=".3em">
+                ?
+              </text>
+            </svg>
           </Link>
-          
           <div className="flex items-center space-x-6">
             {session ? (
               <>
                 <Link 
                   href="/calendar" 
-                  className="text-[15px] font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                  aria-label={t('calendar')}
+                  className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
                 >
-                  {t('calendar')}
+                  {/* Calendar SVG */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <rect x="3" y="4" width="18" height="18" rx="4" fill="none" stroke="currentColor" />
+                    <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
+                  </svg>
                 </Link>
-                
                 <button 
                   onClick={() => signOut()}
-                  className="text-[15px] font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                  aria-label={t('signOut')}
+                  className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
                 >
-                  {t('signOut')}
+                  {/* Logout SVG */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
+                  </svg>
                 </button>
               </>
             ) : (
               <LoginButton />
             )}
-            
             <LanguageSwitcher />
-            
             <button 
               onClick={toggleDarkMode}
               className="p-2 rounded-full bg-slate-100/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 hover:bg-indigo-100/70 dark:hover:bg-indigo-900/30 transition-all duration-200"

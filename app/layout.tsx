@@ -22,9 +22,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </div>
           </main>
-          <footer className="py-8 px-8 text-center text-sm text-slate-500 dark:text-slate-400">
-            <p>Ma petite question — Capturez vos souvenirs précieux chaque jour</p>
-          </footer>
           {process.env.NODE_ENV === 'development' && <SessionDebug />}
         </Providers>
       </body>

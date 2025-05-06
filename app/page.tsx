@@ -289,8 +289,10 @@ export default function HomePage() {
 
   // Logged in state - Response form (agrandi et responsive)
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 md:p-12">
-      <h1 className={`text-4xl sm:text-5xl md:text-7xl font-bold text-indigo-600 dark:text-indigo-400 mb-10 sm:mb-16 md:mb-20 ${permanentMarker.className}`}>{t('mainPageTitle') || 'Ma petite question'}</h1>
+    <div className="min-h-screen flex flex-col items-center justify-start pt-4 sm:pt-8 md:pt-12">
+      <h1 className={`text-center font-bold text-indigo-600 dark:text-indigo-400 mb-6 sm:mb-12 md:mb-16 ${permanentMarker.className} whitespace-nowrap`} style={{ fontSize: 'clamp(2rem, 8vw, 5rem)' }}>
+        {t('mainPageTitle') || 'Ma petite question'}
+      </h1>
       <div className="w-full max-w-full sm:max-w-2xl md:max-w-3xl bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl dark:shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 p-4 sm:p-8 md:p-16 transition-colors duration-200">
         <div className="mb-8 sm:mb-12 md:mb-14 p-4 sm:p-8 md:p-10 bg-slate-50 dark:bg-slate-700 rounded-xl md:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner transition-colors duration-200">
           <p className="text-lg sm:text-2xl md:text-3xl text-slate-700 dark:text-slate-200 italic font-serif text-center">
@@ -330,8 +332,9 @@ export default function HomePage() {
               placeholder={t('writeYourThoughtsHere') || 'Write your thoughts here...'}
               aria-label={t('writeYourThoughtsHere') || 'Write your thoughts here...'}
               rows={8}
-              className="w-full p-8 textarea-focus border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 resize-none rounded-xl focus:ring-4 focus:ring-indigo-500 dark:focus:ring-indigo-500 focus:border-indigo-500 dark:focus:border-indigo-500 shadow-inner text-2xl transition-colors duration-200"
+              className="w-full p-8 textarea-focus border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 resize-none rounded-xl focus:ring-4 focus:ring-indigo-500 dark:focus:ring-indigo-500 focus:border-indigo-500 dark:focus:border-indigo-500 shadow-inner text-2xl transition-colors duration-200 sm:text-2xl text-xl sm:p-8 p-6"
               data-gramm="false"
+              style={{ fontSize: 'clamp(1rem, 4vw, 2rem)' }}
             />
           </div>
 
@@ -340,15 +343,15 @@ export default function HomePage() {
               type="submit"
               disabled={isSubmitting || !response.trim()}
               title={t('submitAnswer') || 'Submit Answer'}
-              className="p-6 rounded-full flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white disabled:opacity-50 transition-colors duration-150 ease-in-out shadow-lg hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500 dark:focus:ring-indigo-500 focus:ring-offset-4 focus:ring-offset-white dark:focus:ring-offset-slate-800 text-3xl"
+              className="p-6 sm:p-6 p-5 rounded-full flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white disabled:opacity-50 transition-colors duration-150 ease-in-out shadow-lg hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500 dark:focus:ring-indigo-500 focus:ring-offset-4 focus:ring-offset-white dark:focus:ring-offset-slate-800 text-3xl"
             >
               {isSubmitting ? (
-                <svg className="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin h-9 w-9 sm:h-10 sm:w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-11 w-11 sm:h-12 sm:w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                 </svg>
               )}
