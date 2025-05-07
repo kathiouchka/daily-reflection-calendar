@@ -8,6 +8,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { useLanguage } from '@/components/LanguageContext';
 import { getTranslation } from '@/lib/translations';
 import { Permanent_Marker, Inter } from 'next/font/google';
+import ConfirmModal from '@/components/ConfirmModal';
 
 const permanentMarker = Permanent_Marker({ subsets: ['latin'], weight: '400' });
 const inter = Inter({ subsets: ['latin'] });
@@ -21,12 +22,32 @@ export default function HomePage() {
   const [error, setError] = useState('');
   const [initialResponseFetched, setInitialResponseFetched] = useState(false);
   const [hasLoadedResponse, setHasLoadedResponse] = useState(false);
-  const router = useRouter();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
+  const [hasShakenSinceOverLimit, setHasShakenSinceOverLimit] = useState(false);
+  const router = useRouter();
   const { locale } = useLanguage();
   const t = (key: string) => getTranslation(key, locale);
 
   const [isAutoSubmitting, setIsAutoSubmitting] = useState(false);
+
+  // Effect to trigger shake animation when char count exceeds 1000 for the first time
+  // during a period of being over the limit.
+  useEffect(() => {
+    if (response.length > 1000) {
+      if (!hasShakenSinceOverLimit) {
+        setIsShaking(true);
+        setHasShakenSinceOverLimit(true);
+        setTimeout(() => setIsShaking(false), 500); // Duration of the shake animation
+      }
+    } else {
+      // Reset if length goes below or equal to 1000, allowing it to shake again next time
+      if (hasShakenSinceOverLimit) {
+        setHasShakenSinceOverLimit(false);
+      }
+    }
+  }, [response.length, hasShakenSinceOverLimit]); // Depend on response.length and the new state
 
   // Fetch the phrase of the day
   useEffect(() => {
@@ -121,17 +142,22 @@ export default function HomePage() {
 
     // Confirmation for modifying an existing response (now after other checks)
     if (hasLoadedResponse) {
-      const confirmed = window.confirm(t('confirmOverwriteResponse') || "You are about to modify your saved response. The previous version will be overwritten. Continue?");
-      if (!confirmed) {
-        setIsSubmitting(false); // Reset submitting state if user cancels
-        return;
-      }
+      setIsConfirmModalOpen(true);
+      return;
     }
 
+    // If not hasLoadedResponse, or if modal was confirmed, proceed with submission logic directly
+    await actualSubmissionLogic();
+  }, [response, t, setHasUnsavedChanges, hasLoadedResponse, isAutoSubmitting]);
+
+  // Extracted submission logic to be called by handleSubmit or modal confirmation
+  const actualSubmissionLogic = useCallback(async () => {
+    // Ensure isSubmitting is true when this logic runs
+    if (!isSubmitting && !isAutoSubmitting) setIsSubmitting(true);
+    // Reset error for a new submission attempt
+    setError(''); 
+
     const sanitizedResponse = DOMPurify.sanitize(response.trim());
-    
-    setIsSubmitting(true);
-    setError('');
     
     try {
       const res = await fetch('/api/response', {
@@ -181,8 +207,9 @@ export default function HomePage() {
       setTimeout(() => setError(''), 3000);
     } finally {
       setIsSubmitting(false);
+      if (isAutoSubmitting) setIsAutoSubmitting(false);
     }
-  }, [response, t, setHasUnsavedChanges, hasLoadedResponse]);
+  }, [response, t, session, router, handleSubmit, isAutoSubmitting]);
 
   // Handle keyboard shortcuts for form submission (authenticated)
   const handleKeyDownAuth = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -333,7 +360,15 @@ export default function HomePage() {
                 data-gramm="false"
                 style={{ fontSize: 'clamp(1rem, 3.5vw, 1.75rem)' }}
               />
-              <div className="text-right text-sm text-slate-500 dark:text-slate-400 mt-2 pr-1">
+              <div 
+                className={`text-right text-sm mt-2 pr-1 ${isShaking ? 'shake' : ''} ${
+                  response.length > 1000 
+                    ? 'text-red-500 dark:text-red-400 font-bold' 
+                    : response.length === 1000 
+                    ? 'text-green-500 dark:text-green-400 font-bold' 
+                    : 'text-slate-500 dark:text-slate-400'
+                }`}
+              >
                 {response.length}/1000
               </div>
             </div>
@@ -373,6 +408,21 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => {
+          setIsConfirmModalOpen(false);
+          setIsSubmitting(false);
+        }}
+        onConfirm={async () => {
+          setIsSubmitting(true); 
+          await actualSubmissionLogic();
+        }}
+        title={t('confirmOverwriteTitle') || "Confirm Overwrite"}
+        message={t('confirmOverwriteResponse') || "You are about to modify your saved response. The previous version will be overwritten. Continue?"}
+        confirmButtonText={t('modalConfirmButton') || "Confirm"}
+        cancelButtonText={t('modalCancelButton') || "Cancel"}
+      />
     </main>
   );
 }

@@ -34,11 +34,16 @@ export const translations: Translations = {
     "unsavedResponseConfirmUnauth": "You have an unsaved response. Sign in to save it, or leave?",
     "loading": "Loading...",
     "writeYourThoughtsHere": "Write your thoughts here...",
+    "responseSavedSuccess": "Response saved successfully!",
     "signInToSaveYourResponse": "Sign in to save your response and build your memory calendar.",
     "processing": "Processing...",
     "saveAndSignIn": "Save & Sign In",
     "submitAnswer": "Submit Answer",
     "signInToSavePrompt": "Sign in to save your answer.",
+    "confirmOverwriteTitle": "Confirm Change",
+    "confirmOverwriteResponse": "You are about to modify your saved response. The previous version will be overwritten. Continue?",
+    "modalConfirmButton": "Confirm",
+    "modalCancelButton": "Cancel",
     
     // Calendar
     "calendar": "Calendar",
@@ -106,11 +111,16 @@ export const translations: Translations = {
     "unsavedResponseConfirmUnauth": "Vous avez une réponse non enregistrée. Connectez-vous pour la sauvegarder, ou quitter ?",
     "loading": "Chargement...",
     "writeYourThoughtsHere": "Écrivez vos pensées ici...",
+    "responseSavedSuccess": "Réponse enregistrée avec succès !",
     "signInToSaveYourResponse": "Connectez-vous pour sauvegarder votre réponse et construire votre calendrier de souvenirs.",
     "processing": "Traitement en cours...",
     "saveAndSignIn": "Sauvegarder & Se connecter",
     "submitAnswer": "Soumettre la réponse",
     "signInToSavePrompt": "Connectez-vous pour sauvegarder votre réponse.",
+    "confirmOverwriteTitle": "Confirmer la modification",
+    "confirmOverwriteResponse": "Vous êtes sur le point de modifier votre réponse enregistrée. La version précédente sera écrasée. Continuer ?",
+    "modalConfirmButton": "Confirmer",
+    "modalCancelButton": "Annuler",
     
     // Calendrier
     "calendar": "Calendrier",
