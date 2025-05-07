@@ -4,16 +4,32 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { format, startOfMonth, endOfMonth, startOfWeek, addDays, isSameMonth, isSameDay, subMonths, addMonths } from "date-fns";
+import { fr as frLocale, enUS as enUSLocale } from 'date-fns/locale'; // Import locales
 import DOMPurify from 'dompurify';
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from 'react-markdown';
 import { Inter } from 'next/font/google';
+import { useLanguage } from '@/components/LanguageContext'; // Import useLanguage
 
 const inter = Inter({ subsets: ['latin'] });
 
+// Helper to map app locale to date-fns locale
+const getDateFnsLocale = (locale: string) => {
+  switch (locale) {
+    case 'fr':
+      return frLocale;
+    case 'en':
+    default:
+      return enUSLocale;
+  }
+};
+
 export default function CalendarPage() {
   const { data: session } = useSession();
+  const { locale } = useLanguage(); // Get current locale
+  const dateFnsLocale = getDateFnsLocale(locale); // Get date-fns locale object
+
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(startOfMonth(today));
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -72,31 +88,36 @@ export default function CalendarPage() {
     setSelectedDate(day);
   };
 
-  const monthLabel = format(currentMonth, "MMMM yyyy");
+  const monthLabel = format(currentMonth, "MMMM yyyy", { locale: dateFnsLocale });
+
+  const dayNames = Array.from({ length: 7 }, (_, i) => {
+    const day = addDays(startOfWeek(new Date(), { locale: dateFnsLocale, weekStartsOn: 0 }), i);
+    return format(day, 'EEE', { locale: dateFnsLocale });
+  });
 
   return (
     <ProtectedRoute>
       <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white flex items-center justify-center p-4 sm:p-8 ${inter.className}`}>
-        <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-5xl relative backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
+        <div className="bg-white dark:bg-gray-800 p-6 sm:p-10 rounded-2xl shadow-xl w-full max-w-6xl relative backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
           {/* Mobile-friendly header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 sm:mb-10 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 sm:mb-12 gap-4">
             <div className="flex items-center justify-between sm:justify-start space-x-6">
               <button 
                 onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                className="p-2.5 rounded-full bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
+                className="p-3 rounded-full bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
                 aria-label="Previous month"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </button>
-              <h2 className="text-2xl font-semibold tracking-tight">{monthLabel}</h2>
+              <h2 className="text-3xl font-semibold tracking-tight">{monthLabel}</h2>
               <button 
                 onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                className="p-2.5 rounded-full bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
+                className="p-3 rounded-full bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
                 aria-label="Next month"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                 </svg>
               </button>
@@ -105,7 +126,7 @@ export default function CalendarPage() {
                   setCurrentMonth(startOfMonth(today));
                   setSelectedDate(today);
                 }}
-                className="ml-2 px-4 py-2 text-sm bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
+                className="ml-2 px-5 py-2.5 text-base bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
               >
                 Today
               </button>
@@ -113,16 +134,16 @@ export default function CalendarPage() {
           </div>
 
           {/* Days of the week */}
-          <div className="grid grid-cols-7 text-center mb-4">
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-              <div key={day} className="py-3 font-medium text-gray-500 dark:text-gray-400 text-sm tracking-wide">
+          <div className="grid grid-cols-7 text-center mb-5">
+            {dayNames.map((day) => (
+              <div key={day} className="py-3.5 font-medium text-gray-500 dark:text-gray-400 text-base tracking-wide">
                 {day}
               </div>
             ))}
           </div>
 
           {/* Calendar grid */}
-          <div key={currentMonth.toString()} className="grid grid-cols-7 gap-2 text-center calendar-fade-in">
+          <div key={currentMonth.toString()} className="grid grid-cols-7 gap-2.5 text-center calendar-fade-in">
             {days.map((day) => {
               const dateStr = format(day, "yyyy-MM-dd");
               const isCurrentMonthDay = isSameMonth(day, monthStart);
@@ -135,19 +156,19 @@ export default function CalendarPage() {
                   key={dateStr} 
                   onClick={() => onDateClick(day)} 
                   className={`
-                    relative p-3 md:p-4 rounded-xl cursor-pointer transition-all duration-300
+                    relative p-3.5 md:p-5 rounded-xl cursor-pointer transition-all duration-300
                     ${!isCurrentMonthDay ? "text-gray-400 dark:text-gray-600" : "text-gray-800 dark:text-white"} 
                     ${isSelected ? "bg-sage-100 dark:bg-sage-900 text-sage-800 dark:text-sage-100 shadow-lg scale-105" : 
                       isToday ? "bg-sage-50 dark:bg-sage-800/50 font-medium" : 
                       "hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:scale-105"}
                   `}
-                  aria-label={`${format(day, "MMMM d, yyyy")}${hasResponse ? ", has response" : ""}`}
+                  aria-label={`${format(day, "MMMM d, yyyy", { locale: dateFnsLocale })}${hasResponse ? ", has response" : ""}`}
                   role="button"
                 >
                   <div className="flex flex-col items-center">
-                    <span className="text-sm md:text-base">{format(day, "d")}</span>
+                    <span className="text-base md:text-lg">{format(day, "d", { locale: dateFnsLocale })}</span>
                     {hasResponse && (
-                      <div className="mt-1.5 w-2 h-2 rounded-full bg-sage-400 dark:bg-sage-300 animate-fade-in"></div>
+                      <div className="mt-2 w-2.5 h-2.5 rounded-full bg-sage-400 dark:bg-sage-300 animate-fade-in"></div>
                     )}
                   </div>
                 </div>
@@ -157,10 +178,10 @@ export default function CalendarPage() {
 
           {/* Selected date details */}
           {selectedDate && (
-            <div className="mt-8 p-6 rounded-2xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600/50 shadow-lg transition-all duration-300 animate-fade-in">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-white tracking-tight">
-                  {format(selectedDate, "MMMM do, yyyy")}
+            <div className="mt-10 p-8 rounded-2xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600/50 shadow-lg transition-all duration-300 animate-fade-in">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-2xl font-semibold text-gray-800 dark:text-white tracking-tight">
+                  {format(selectedDate, "MMMM do, yyyy", { locale: dateFnsLocale })}
                 </h3>
                 {isLoading && (
                   <div className="flex items-center text-gray-500 dark:text-gray-400">
@@ -173,18 +194,18 @@ export default function CalendarPage() {
                 )}
               </div>
               
-              <div className="space-y-6">
-                <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-100 dark:border-gray-600/50 shadow-sm transition-all duration-300 hover:shadow-md">
-                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Daily Phrase</h4>
-                  <p className="text-gray-800 dark:text-gray-200 leading-relaxed">
+              <div className="space-y-8">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-600/50 shadow-sm transition-all duration-300 hover:shadow-md">
+                  <h4 className="text-base font-medium text-gray-500 dark:text-gray-400 mb-3">Daily Phrase</h4>
+                  <p className="text-gray-800 dark:text-gray-200 leading-relaxed text-lg">
                     {phrases[format(selectedDate, "yyyy-MM-dd")] || "A new day brings new possibilities..."}
                   </p>
                 </div>
                 
-                <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-100 dark:border-gray-600/50 shadow-sm transition-all duration-300 hover:shadow-md">
-                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Your Response</h4>
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-600/50 shadow-sm transition-all duration-300 hover:shadow-md">
+                  <h4 className="text-base font-medium text-gray-500 dark:text-gray-400 mb-3">Your Response</h4>
                   {responses[format(selectedDate, "yyyy-MM-dd")] ? (
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words">
                       <ReactMarkdown>
                         {responses[format(selectedDate, "yyyy-MM-dd")]}
                       </ReactMarkdown>
