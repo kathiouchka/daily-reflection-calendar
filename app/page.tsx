@@ -235,14 +235,17 @@ export default function HomePage() {
   return (
     <main className={`mx-auto max-w-screen-md px-4 sm:px-8 ${inter.className} font-sans`}>
       <div className="min-h-screen flex flex-col items-center justify-start pt-4 sm:pt-8 md:pt-12">
-        <h1 className={`text-center font-bold text-brand-primary mb-6 sm:mb-12 md:mb-16 ${permanentMarker.className} whitespace-nowrap`} style={{ fontSize: 'clamp(2rem, 8vw, 5rem)' }}>
+        <h1 className={`text-center font-bold text-brand-primary mb-6 sm:mb-12 md:mb-16 ${permanentMarker.className} whitespace-nowrap leading-tight tracking-wide drop-shadow-[0_1px_4px_rgba(109,123,255,0.35)]`} style={{ fontSize: 'clamp(2rem, 8vw, 5rem)' }}>
           {t('mainPageTitle') || 'Ma petite question'}
         </h1>
-        <div className="w-full max-w-full sm:max-w-2xl md:max-w-3xl bg-white dark:bg-slate-800 rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl dark:shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 p-4 sm:p-8 md:p-16 transition-colors duration-200">
-          <div className="mb-8 sm:mb-12 md:mb-14 p-4 sm:p-8 md:p-10 bg-slate-50 dark:bg-slate-700 rounded-xl md:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner transition-colors duration-200">
+        <div className="relative w-full max-w-full sm:max-w-2xl md:max-w-3xl bg-white/10 dark:bg-slate-700/40 backdrop-blur-sm rounded-3xl shadow-2xl shadow-black/20 ring-1 ring-white/20 dark:ring-slate-700/60 overflow-hidden p-4 sm:p-8 md:p-16 transition-colors duration-200">
+          <div className="relative mb-8 sm:mb-12 md:mb-14 p-6 md:p-8 bg-slate-50 dark:bg-slate-700 rounded-xl md:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner transition-colors duration-200">
             <p className="text-lg sm:text-2xl md:text-3xl text-slate-700 dark:text-slate-200 text-center">
               {phrase || (t('loadingPhrase') || 'Loading question...')}
             </p>
+            <svg width="16" height="8" aria-hidden="true" className="absolute bottom-[-8px] left-1/2 -translate-x-1/2 pointer-events-none">
+              <polygon points="0,0 16,0 8,8" className="fill-slate-50 dark:fill-slate-700" />
+            </svg>
           </div>
 
           {successMessage && (
