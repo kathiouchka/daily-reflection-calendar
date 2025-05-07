@@ -1,6 +1,6 @@
 type Translations = {
   [key: string]: {
-    [key: string]: string;
+    [key: string]: string | string[];
   };
 };
 
@@ -53,6 +53,38 @@ export const translations: Translations = {
     "noResponse": "No response for this date.",
     "addResponse": "Add a response",
     "loadingCalendar": "Loading calendar data...",
+    "calendarPageTitle": "Question of the Day",
+    "calendarPreviousDay": "Previous day",
+    "calendarNextDay": "Next day",
+    "calendarViewButton": "Calendar",
+    "calendarLoadingQuestion": "Loading question...",
+    "calendarNoQuestion": "No question found for this day.",
+    "calendarQuestionOfTheDay": "QUESTION OF THE DAY",
+    "calendarLoadingAnswers": "Loading answers...",
+    "calendarLoadingResponse": "Loading response...",
+    "calendarFutureDate": "This date is in the future.",
+    "calendarNoResponseForYear": "No response recorded for this day in {year}.",
+    "calendarAddTodaysMemory": "Add today's memory",
+    "calendarAddMemoryForThisDay": "Add a memory for this day",
+    "calendarModalPreviousMonth": "Previous month in modal",
+    "calendarModalNextMonth": "Next month in modal",
+    "calendarModalLoadingCalendar": "Loading calendar...",
+    "calendarDayHasResponseSuffix": ", has response",
+    "calendarModalCloseButton": "Close",
+    "calendarPastNoResponseFunny": [
+      "The dog ate my homework... I mean, my memory!",
+      "Lost in the sands of time, or maybe just misplaced.",
+      "This day's memory is playing hide and seek. It's winning.",
+      "An enigma wrapped in a mystery, this day remains silent.",
+      "Perhaps this was the day the aliens visited? No record left."
+    ],
+    "calendarFutureDateRandom": [
+      "The future is unwritten... but it might involve cats.",
+      "Shhh... Spoilers for this day are not allowed!",
+      "Loading future memories... please wait (indefinitely).",
+      "Ask again later, my crystal ball is fuzzy for this date.",
+      "This day is currently under construction. Check back in {years} years!"
+    ],
     
     // Auth
     "signIn": "Sign In",
@@ -130,6 +162,38 @@ export const translations: Translations = {
     "noResponse": "Pas de réponse pour cette date.",
     "addResponse": "Ajouter une réponse",
     "loadingCalendar": "Chargement des données du calendrier...",
+    "calendarPageTitle": "Question du Jour",
+    "calendarPreviousDay": "Jour précédent",
+    "calendarNextDay": "Jour suivant",
+    "calendarViewButton": "Calendrier",
+    "calendarLoadingQuestion": "Chargement de la question...",
+    "calendarNoQuestion": "Aucune question trouvée pour ce jour.",
+    "calendarQuestionOfTheDay": "QUESTION DU JOUR",
+    "calendarLoadingAnswers": "Chargement des réponses...",
+    "calendarLoadingResponse": "Chargement de la réponse...",
+    "calendarFutureDate": "Cette date est dans le futur.",
+    "calendarNoResponseForYear": "Aucune réponse enregistrée pour ce jour en {year}.",
+    "calendarAddTodaysMemory": "Ajouter le souvenir d'aujourd'hui",
+    "calendarAddMemoryForThisDay": "Ajouter un souvenir pour ce jour",
+    "calendarModalPreviousMonth": "Mois précédent (calendrier)",
+    "calendarModalNextMonth": "Mois suivant (calendrier)",
+    "calendarModalLoadingCalendar": "Chargement du calendrier...",
+    "calendarDayHasResponseSuffix": ", a une réponse",
+    "calendarModalCloseButton": "Fermer",
+    "calendarPastNoResponseFunny": [
+      "Le chien a mangé mes devoirs... enfin, ma mémoire !",
+      "Perdu dans les sables du temps, ou peut-être juste égaré.",
+      "Le souvenir de ce jour joue à cache-cache. Et il gagne.",
+      "Une énigme enveloppée de mystère, ce jour reste silencieux.",
+      "Peut-être le jour où les extraterrestres sont venus ? Aucune trace."
+    ],
+    "calendarFutureDateRandom": [
+      "Le futur n'est pas écrit... mais il pourrait impliquer des chats.",
+      "Chut... Les spoilers pour ce jour ne sont pas autorisés !",
+      "Chargement des souvenirs futurs... veuillez patienter (indéfiniment).",
+      "Demandez à nouveau plus tard, ma boule de cristal est floue pour cette date.",
+      "Ce jour est actuellement en construction. Revenez dans {years} ans !"
+    ],
     
     // Authentification
     "signIn": "Connexion",
@@ -163,7 +227,7 @@ export const translations: Translations = {
 
 export const defaultLocale = 'fr';
 
-export function getTranslation(key: string, locale: string = defaultLocale): string {
+export function getTranslation(key: string, locale: string = defaultLocale): string | string[] {
   if (!translations[locale] || !translations[locale][key]) {
     // Fallback to default locale if translation not found
     if (locale !== defaultLocale && translations[defaultLocale] && translations[defaultLocale][key]) {

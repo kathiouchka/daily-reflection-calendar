@@ -59,7 +59,7 @@ export default function HomePage() {
         setPhrase(data.phrase?.text);
       } catch (error) {
         console.error('Error fetching phrase:', error);
-        setPhrase(t('loadingErrorPhrase') || "Unable to load today's phrase.");
+        setPhrase(String(t('loadingErrorPhrase')) || "Unable to load today's phrase.");
       }
     }
     fetchPhrase();
@@ -121,20 +121,20 @@ export default function HomePage() {
     
     // --- Start of reordered checks ---
     if (!response.trim()) {
-      setError(t('pleaseEnterResponse') || 'Please enter a response');
+      setError(String(t('pleaseEnterResponse')) || 'Please enter a response');
       setTimeout(() => setError(''), 3000);
       return;
     }
     
     if (response.length > 1000) {
-      setError(t('responseTooLong') || 'Response exceeds maximum length');
+      setError(String(t('responseTooLong')) || 'Response exceeds maximum length');
       setTimeout(() => setError(''), 3000);
       return;
     }
     
     const suspiciousPatterns = [/<script/i, /javascript:/i, /on\w+=/i, /data:/i];
     if (suspiciousPatterns.some(pattern => pattern.test(response))) {
-      setError(t('unsafeContentError') || 'Response contains potentially unsafe content');
+      setError(String(t('unsafeContentError')) || 'Response contains potentially unsafe content');
       setTimeout(() => setError(''), 3000);
       return;
     }
@@ -173,7 +173,7 @@ export default function HomePage() {
         // We can use result.error if provided by the backend, or a generic message.
         throw new Error(result.error || 'Failed to submit response');
       } else {
-        setSuccessMessage(t('responseSavedSuccess') || 'Response saved successfully!');
+        setSuccessMessage(String(t('responseSavedSuccess')) || 'Response saved successfully!');
         setResponse(result.response || '');
         setHasLoadedResponse(!!(result.response && result.response.trim()));
         setHasUnsavedChanges(false);
@@ -203,7 +203,7 @@ export default function HomePage() {
       }
     } catch (error) {
       console.error('Error submitting response:', error);
-      setError(t('submitFailedError') || 'Failed to submit. Please try again.');
+      setError(String(t('submitFailedError')) || 'Failed to submit. Please try again.');
       setTimeout(() => setError(''), 3000);
     } finally {
       setIsSubmitting(false);
@@ -225,7 +225,7 @@ export default function HomePage() {
     setError('');
 
     if (!response.trim()) {
-      setError(t('pleaseEnterResponseToSave') || 'Please enter a response to save.');
+      setError(String(t('pleaseEnterResponseToSave')) || 'Please enter a response to save.');
       setTimeout(() => setError(''), 3000);
       return;
     }
@@ -236,7 +236,7 @@ export default function HomePage() {
       signIn('google', { callbackUrl: window.location.pathname });
     } catch (err) {
       console.error("Error during sign-in initiation:", err);
-      setError(t('signInFailedError') || 'Failed to initiate sign-in. Please try again.');
+      setError(String(t('signInFailedError')) || 'Failed to initiate sign-in. Please try again.');
       setTimeout(() => setError(''), 3000);
       setIsSubmitting(false); // Reset if sign-in initiation fails
     }
@@ -278,12 +278,12 @@ export default function HomePage() {
   const navigateToCalendar = (e: React.MouseEvent) => {
     if (hasUnsavedChanges && session) { // Only if logged in and has changes
       e.preventDefault();
-      if (confirm(t('unsavedChangesConfirm') || 'You have unsaved changes. Are you sure you want to leave?')) {
+      if (confirm(String(t('unsavedChangesConfirm')) || 'You have unsaved changes. Are you sure you want to leave?')) {
         router.push('/calendar');
       }
     } else if (!session && response.trim().length > 0) { // Unauthenticated with text in box
         e.preventDefault();
-        if (confirm(t('unsavedResponseConfirmUnauth') || 'You have an unsaved response. Sign in to save it, or leave?')) {
+        if (confirm(String(t('unsavedResponseConfirmUnauth')) || 'You have an unsaved response. Sign in to save it, or leave?')) {
              router.push('/calendar'); // Or offer to sign in first: handleSignInAndSave();
         }
     } else {
@@ -299,7 +299,7 @@ export default function HomePage() {
           <div className="animate-pulse text-slate-300">
             <div className="flex flex-col items-center">
               <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p>{t('loading') || 'Loading...'}</p>
+              <p>{String(t('loading')) || 'Loading...'}</p>
             </div>
           </div>
         </div>
@@ -312,12 +312,12 @@ export default function HomePage() {
     <main className={`mx-auto max-w-screen-md px-4 sm:px-8 ${inter.className} font-sans`}>
       <div className="min-h-screen flex flex-col items-center justify-start pt-4 sm:pt-8 md:pt-12">
         <h1 className={`text-center font-bold text-brand-primary mb-6 sm:mb-12 md:mb-16 ${permanentMarker.className} whitespace-nowrap leading-tight tracking-wide drop-shadow-[0_1px_4px_rgba(109,123,255,0.35)]`} style={{ fontSize: 'clamp(2rem, 8vw, 5rem)' }}>
-          {t('mainPageTitle') || 'Ma petite question'}
+          {String(t('mainPageTitle')) || 'Ma petite question'}
         </h1>
         <div className="relative w-full max-w-full sm:max-w-2xl md:max-w-3xl bg-white/10 dark:bg-slate-700/40 backdrop-blur-sm rounded-3xl shadow-2xl shadow-black/20 ring-1 ring-white/20 dark:ring-slate-700/60 overflow-hidden p-4 sm:p-8 md:p-16 transition-colors duration-200">
           <div className="relative mb-8 sm:mb-12 md:mb-14 p-6 md:p-8 bg-slate-50 dark:bg-slate-700 rounded-xl md:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner transition-colors duration-200">
             <p className="text-lg sm:text-2xl md:text-3xl text-slate-700 dark:text-slate-200 text-center">
-              {phrase || (t('loadingPhrase') || 'Loading question...')}
+              {phrase || (String(t('loadingPhrase')) || 'Loading question...')}
             </p>
             <svg width="16" height="8" aria-hidden="true" className="absolute bottom-[-8px] left-1/2 -translate-x-1/2 pointer-events-none">
               <polygon points="0,0 16,0 8,8" className="fill-slate-50 dark:fill-slate-700" />
@@ -353,8 +353,8 @@ export default function HomePage() {
                 value={response}
                 onChange={(e) => setResponse(e.target.value)}
                 onKeyDown={session ? handleKeyDownAuth : handleKeyDownUnauth}
-                placeholder={session && initialResponseFetched && response ? '' : (t('writeYourThoughtsHere') || 'Write your thoughts here...')}
-                aria-label={t('writeYourThoughtsHere') || 'Write your thoughts here...'}
+                placeholder={session && initialResponseFetched && response ? '' : (String(t('writeYourThoughtsHere')) || 'Write your thoughts here...')}
+                aria-label={String(t('writeYourThoughtsHere')) || 'Write your thoughts here...'}
                 rows={7}
                 className="w-full p-4 sm:p-6 md:p-8 textarea-focus border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 resize-none rounded-lg sm:rounded-xl focus:ring-2 sm:focus:ring-4 focus:ring-brand-primary dark:focus:ring-brand-primary focus:border-brand-primary dark:focus:border-brand-primary shadow-inner transition-colors duration-200"
                 data-gramm="false"
@@ -377,7 +377,7 @@ export default function HomePage() {
               <button
                 type="submit"
                 disabled={isSubmitting || !response.trim()}
-                title={session ? (t('submitAnswer') || 'Submit Answer') : (t('signInAndSave') || 'Save & Sign In')}
+                title={session ? (String(t('submitAnswer')) || 'Submit Answer') : (String(t('signInAndSave')) || 'Save & Sign In')}
                 className="p-3 sm:p-4 md:p-5 rounded-full flex items-center justify-center bg-brand-primary hover:bg-brand-primary/90 text-white disabled:opacity-50 transition-colors duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-brand-primary dark:focus:ring-brand-primary focus:ring-offset-2 sm:focus:ring-offset-4 focus:ring-offset-white dark:focus:ring-offset-slate-800"
               >
                 {isSubmitting ? (
@@ -403,7 +403,7 @@ export default function HomePage() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 sm:h-8 sm:w-8" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
               </svg>
-              <span>{t('viewCalendar')}</span>
+              <span>{String(t('viewCalendar'))}</span>
             </Link>
           </div>
         </div>
@@ -418,10 +418,10 @@ export default function HomePage() {
           setIsSubmitting(true); 
           await actualSubmissionLogic();
         }}
-        title={t('confirmOverwriteTitle') || "Confirm Overwrite"}
-        message={t('confirmOverwriteResponse') || "You are about to modify your saved response. The previous version will be overwritten. Continue?"}
-        confirmButtonText={t('modalConfirmButton') || "Confirm"}
-        cancelButtonText={t('modalCancelButton') || "Cancel"}
+        title={String(t('confirmOverwriteTitle')) || "Confirm Overwrite"}
+        message={String(t('confirmOverwriteResponse')) || "You are about to modify your saved response. The previous version will be overwritten. Continue?"}
+        confirmButtonText={String(t('modalConfirmButton')) || "Confirm"}
+        cancelButtonText={String(t('modalCancelButton')) || "Cancel"}
       />
     </main>
   );
