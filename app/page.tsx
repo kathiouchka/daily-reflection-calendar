@@ -19,6 +19,8 @@ export default function HomePage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [initialResponseFetched, setInitialResponseFetched] = useState(false);
+  const [hasLoadedResponse, setHasLoadedResponse] = useState(false);
   const router = useRouter();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const { locale } = useLanguage();
@@ -36,11 +38,42 @@ export default function HomePage() {
         setPhrase(data.phrase?.text);
       } catch (error) {
         console.error('Error fetching phrase:', error);
-        setPhrase(t('loadingErrorPhrase') || 'Unable to load today\'s phrase.');
+        setPhrase(t('loadingErrorPhrase') || "Unable to load today's phrase.");
       }
     }
     fetchPhrase();
   }, [t]);
+
+  // Fetch today\'s response for authenticated user
+  useEffect(() => {
+    async function fetchTodaysResponse() {
+      if (session && status === 'authenticated') {
+        try {
+          const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+          const res = await fetch(`/api/response?date=${today}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.response) {
+              setResponse(data.response);
+              setHasLoadedResponse(true);
+            }
+          } else if (res.status !== 404) { // 404 is fine, means no response yet
+            console.error("Failed to fetch today's response:", await res.text());
+          }
+        } catch (err) {
+          console.error("Error fetching today's response:", err);
+        } finally {
+          setInitialResponseFetched(true); // Mark as fetched even if error or no response
+        }
+      } else if (!session) {
+        setInitialResponseFetched(true); // For unauthenticated users, consider it "fetched" (no response to fetch)
+      }
+    }
+
+    if (phrase) { 
+      fetchTodaysResponse();
+    }
+  }, [session, status, phrase]);
 
   // Update hasUnsavedChanges when response changes
   useEffect(() => {
@@ -65,6 +98,7 @@ export default function HomePage() {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // --- Start of reordered checks ---
     if (!response.trim()) {
       setError(t('pleaseEnterResponse') || 'Please enter a response');
       setTimeout(() => setError(''), 3000);
@@ -77,13 +111,23 @@ export default function HomePage() {
       return;
     }
     
-    const suspiciousPatterns = [/<script/i, /javascript:/i, /on\\w+=/i, /data:/i];
+    const suspiciousPatterns = [/<script/i, /javascript:/i, /on\w+=/i, /data:/i];
     if (suspiciousPatterns.some(pattern => pattern.test(response))) {
       setError(t('unsafeContentError') || 'Response contains potentially unsafe content');
       setTimeout(() => setError(''), 3000);
       return;
     }
-    
+    // --- End of initial validations ---
+
+    // Confirmation for modifying an existing response (now after other checks)
+    if (hasLoadedResponse) {
+      const confirmed = window.confirm(t('confirmOverwriteResponse') || "You are about to modify your saved response. The previous version will be overwritten. Continue?");
+      if (!confirmed) {
+        setIsSubmitting(false); // Reset submitting state if user cancels
+        return;
+      }
+    }
+
     const sanitizedResponse = DOMPurify.sanitize(response.trim());
     
     setIsSubmitting(true);
@@ -96,34 +140,41 @@ export default function HomePage() {
         body: JSON.stringify({ response: sanitizedResponse }),
       });
       
-      if (!res.ok) throw new Error('Failed to submit');
+      const result = await res.json();
+
+      if (!res.ok) {
+        // The backend now always updates or creates, so a !res.ok is a genuine error.
+        // We can use result.error if provided by the backend, or a generic message.
+        throw new Error(result.error || 'Failed to submit response');
+      } else {
+        setSuccessMessage(t('responseSavedSuccess') || 'Response saved successfully!');
+        setResponse(result.response || '');
+        setHasLoadedResponse(!!(result.response && result.response.trim()));
+        setHasUnsavedChanges(false);
       
-      setSuccessMessage(t('responseSubmittedSuccess') || 'Response submitted successfully!');
-      setResponse('');
-      setHasUnsavedChanges(false);
-      
-      const confettiContainer = document.createElement('div');
-      confettiContainer.className = 'fixed inset-0 pointer-events-none z-50';
-      document.body.appendChild(confettiContainer);
-      
-      for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'absolute w-2 h-2 bg-blue-500 rounded-full'; // Confetti color can be theme aligned
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.top = '-10px';
-        confetti.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
-        confetti.style.opacity = Math.random() * 0.5 + 0.5 + '';
-        confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-        confettiContainer.appendChild(confetti);
-      }
-      
-      setTimeout(() => {
-        if (document.body.contains(confettiContainer)) {
-          document.body.removeChild(confettiContainer);
+        const confettiContainer = document.createElement('div');
+        confettiContainer.className = 'fixed inset-0 pointer-events-none z-50';
+        document.body.appendChild(confettiContainer);
+        
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement('div');
+          confetti.className = 'absolute w-2 h-2 bg-blue-500 rounded-full'; // Confetti color can be theme aligned
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.top = '-10px';
+          confetti.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+          confetti.style.opacity = Math.random() * 0.5 + 0.5 + '';
+          confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+          confettiContainer.appendChild(confetti);
         }
-      }, 5000);
-      
-      setTimeout(() => setSuccessMessage(''), 3000);
+        
+        setTimeout(() => {
+          if (document.body.contains(confettiContainer)) {
+            document.body.removeChild(confettiContainer);
+          }
+        }, 5000);
+        
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
     } catch (error) {
       console.error('Error submitting response:', error);
       setError(t('submitFailedError') || 'Failed to submit. Please try again.');
@@ -131,15 +182,13 @@ export default function HomePage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [response, t, setHasUnsavedChanges]); // Added dependencies for useCallback
+  }, [response, t, setHasUnsavedChanges, hasLoadedResponse]);
 
   // Handle keyboard shortcuts for form submission (authenticated)
   const handleKeyDownAuth = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
-      if (response.trim()) {
-        handleSubmit(e as unknown as React.FormEvent);
-      }
+      handleSubmit(e as unknown as React.FormEvent);
     }
   };
   
@@ -185,7 +234,7 @@ export default function HomePage() {
       if (pendingResponseText) {
         localStorage.removeItem('pendingResponse');
         setResponse(pendingResponseText);
-        setIsAutoSubmitting(true); // Signal to auto-submit
+        setIsAutoSubmitting(true); 
       }
     }
   }, [session, status]);
@@ -277,13 +326,16 @@ export default function HomePage() {
                 value={response}
                 onChange={(e) => setResponse(e.target.value)}
                 onKeyDown={session ? handleKeyDownAuth : handleKeyDownUnauth}
-                placeholder={t('writeYourThoughtsHere') || 'Write your thoughts here...'}
+                placeholder={session && initialResponseFetched && response ? '' : (t('writeYourThoughtsHere') || 'Write your thoughts here...')}
                 aria-label={t('writeYourThoughtsHere') || 'Write your thoughts here...'}
                 rows={7}
                 className="w-full p-4 sm:p-6 md:p-8 textarea-focus border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 resize-none rounded-lg sm:rounded-xl focus:ring-2 sm:focus:ring-4 focus:ring-brand-primary dark:focus:ring-brand-primary focus:border-brand-primary dark:focus:border-brand-primary shadow-inner transition-colors duration-200"
                 data-gramm="false"
                 style={{ fontSize: 'clamp(1rem, 3.5vw, 1.75rem)' }}
               />
+              <div className="text-right text-sm text-slate-500 dark:text-slate-400 mt-2 pr-1">
+                {response.length}/1000
+              </div>
             </div>
 
             <div className="flex justify-center items-center pt-0.5 pb-0.5 sm:pt-2 sm:pb-2">

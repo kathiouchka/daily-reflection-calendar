@@ -54,15 +54,16 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    let savedResponse;
     if (existingResponse) {
       // Update existing response
-      await prisma.userResponse.update({
+      savedResponse = await prisma.userResponse.update({
         where: { id: existingResponse.id },
         data: { responseText: response },
       });
     } else {
       // Create new response
-      await prisma.userResponse.create({
+      savedResponse = await prisma.userResponse.create({
         data: {
           responseText: response,
           userId: user.id,
@@ -71,7 +72,11 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true, 
+      response: savedResponse.responseText 
+    }, { status: existingResponse ? 200 : 201 }); // 200 OK if updated, 201 Created if new
+
   } catch (error) {
     logger.error({ err: error, userEmail: session.user.email }, 'Error saving response');
     return NextResponse.json({ error: 'Failed to save response' }, { status: 500 });
