@@ -30,7 +30,9 @@ module.exports = {
             paper: '#FAF7F2',
             ink: '#2C3E50',
             accent: '#54BAB9',
-          }
+          },
+          'brand-primary': '#6d7bff',
+          'brand-surface': '#1e2138',
         },
         animation: {
           'fade-in': 'fadeIn 0.5s ease-in-out',
