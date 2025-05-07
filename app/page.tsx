@@ -356,9 +356,8 @@ export default function HomePage() {
                 placeholder={session && initialResponseFetched && response ? '' : (String(t('writeYourThoughtsHere')) || 'Write your thoughts here...')}
                 aria-label={String(t('writeYourThoughtsHere')) || 'Write your thoughts here...'}
                 rows={7}
-                className="w-full p-4 sm:p-6 md:p-8 textarea-focus border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 resize-none rounded-lg sm:rounded-xl focus:ring-2 sm:focus:ring-4 focus:ring-brand-primary dark:focus:ring-brand-primary focus:border-brand-primary dark:focus:border-brand-primary shadow-inner transition-colors duration-200"
+                className="w-full p-4 sm:p-6 md:p-8 textarea-focus border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 resize-none rounded-lg sm:rounded-xl focus:ring-2 sm:focus:ring-4 focus:ring-brand-primary dark:focus:ring-brand-primary focus:border-brand-primary dark:focus:border-brand-primary shadow-inner transition-colors duration-200 text-lg"
                 data-gramm="false"
-                style={{ fontSize: 'clamp(1rem, 3.5vw, 1.75rem)' }}
               />
               <div 
                 className={`text-right text-sm mt-2 pr-1 ${isShaking ? 'shake' : ''} ${

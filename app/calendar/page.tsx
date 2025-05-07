@@ -192,7 +192,7 @@ export default function CalendarPage() {
   return (
     <ProtectedRoute>
       <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white flex flex-col items-center p-4 sm:p-8 ${inter.className}`}>
-        <h1 className={`text-center font-bold text-brand-primary mb-6 sm:mb-10 md:mb-12 ${permanentMarker.className} whitespace-nowrap leading-tight tracking-wide drop-shadow-[0_1px_4px_rgba(109,123,255,0.35)]`} style={{ fontSize: 'clamp(1.8rem, 7vw, 4rem)' }}>
+        <h1 className={`text-center font-bold text-brand-primary mb-6 sm:mb-12 md:mb-16 ${permanentMarker.className} whitespace-nowrap leading-tight tracking-wide drop-shadow-[0_1px_4px_rgba(109,123,255,0.35)]`} style={{ fontSize: 'clamp(2rem, 8vw, 5rem)' }}>
           {t('calendarPageTitle')}
         </h1>
         <div className="bg-white dark:bg-gray-800 p-6 sm:p-10 rounded-2xl shadow-xl w-full max-w-3xl relative backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
@@ -209,9 +209,15 @@ export default function CalendarPage() {
                   <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </button>
-              <h2 className="text-xl sm:text-3xl font-semibold tracking-tight text-center sm:text-left whitespace-nowrap">
+              <h3 
+                className="text-base sm:text-lg font-medium tracking-tight text-center sm:text-left whitespace-nowrap cursor-pointer hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+                onClick={() => {
+                  setCalendarDisplayMonth(startOfMonth(selectedDate));
+                  setShowCalendarModal(true);
+                }}
+              >
                 {formattedSelectedDate}
-              </h2>
+              </h3>
               <button 
                 onClick={handleNextDay}
                 className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
@@ -225,28 +231,22 @@ export default function CalendarPage() {
             <div className="flex items-center justify-center sm:justify-end space-x-2 sm:space-x-3 mt-4 sm:mt-0">
               <button
                 onClick={handleGoToToday}
-                className="px-4 py-2 sm:px-5 sm:py-2.5 text-sm sm:text-base bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 text-base sm:text-lg font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-gray-800 dark:text-white transition-all duration-300 hover:scale-105"
               >
                 {t('today')}
-              </button>
-              <button
-                onClick={() => {
-                  setCalendarDisplayMonth(startOfMonth(selectedDate));
-                  setShowCalendarModal(true);
-                }}
-                className="px-4 py-2 sm:px-5 sm:py-2.5 text-sm sm:text-base bg-brand-primary hover:bg-brand-primary/90 dark:bg-brand-primary dark:hover:bg-brand-primary/80 rounded-full text-white transition-all duration-300 hover:scale-105"
-              >
-                {t('calendarViewButton')}
               </button>
             </div>
           </div>
 
-          {/* Question of the Day Section - This H3 is now styled as the main page title above */}
-          <div className="mb-10 sm:mb-12 text-center animate-fade-in">
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-5 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-600/50 shadow-md">
-              <p className="text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-relaxed">
+          {/* Question of the Day Section - Replicated from app/page.tsx for consistency */}
+          <div className="relative mb-8 sm:mb-12 md:mb-14 text-center">
+            <div className="relative p-6 md:p-8 bg-slate-50 dark:bg-slate-700 rounded-xl md:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner transition-colors duration-200">
+              <p className="text-lg sm:text-2xl md:text-3xl text-slate-700 dark:text-slate-200 text-center">
                 {questionForSelectedDate}
               </p>
+              <svg width="16" height="8" aria-hidden="true" className="absolute bottom-[-8px] left-1/2 -translate-x-1/2 pointer-events-none">
+                <polygon points="0,0 16,0 8,8" className="fill-slate-50 dark:fill-slate-700" />
+              </svg>
             </div>
           </div>
 
@@ -303,18 +303,18 @@ export default function CalendarPage() {
 
                 return (
                   <div key={year} className="bg-white dark:bg-gray-800 p-5 sm:p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300 hover:shadow-md">
-                    <h4 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white mb-3">{year}</h4>
+                    <h5 className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 mb-2">{year}</h5>
                     {isLoading && !responseForYear && !isFutureDate ? (
-                       <p className="text-gray-500 dark:text-gray-400">{t('calendarLoadingResponse')}</p>
+                       <p className="text-lg font-normal text-gray-500 dark:text-gray-400">{t('calendarLoadingResponse')}</p>
                     ): responseForYear ? (
-                      <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none break-words">
+                      <div className="prose prose-lg dark:prose-invert max-w-none break-words">
                         <ReactMarkdown>{responseForYear}</ReactMarkdown>
                       </div>
                     ) : isFutureDate ? (
-                       <p className="text-gray-400 dark:text-gray-500 italic">{futureDateMessage}</p>
+                       <p className="text-lg font-normal text-gray-500 dark:text-gray-400">{futureDateMessage}</p>
                     ) : (
                       <div className="text-gray-500 dark:text-gray-400">
-                        <p>{noResponseMessage}</p>
+                        <p className="text-lg font-normal">{noResponseMessage}</p>
                         {year === today.getFullYear() && isSameDay(dateForYear, today) && (
                            <Link href="/" className="mt-2 inline-block text-sage-600 hover:text-sage-700 dark:text-sage-400 dark:hover:text-sage-300 transition-colors duration-300">
                             {t('calendarAddTodaysMemory')}
