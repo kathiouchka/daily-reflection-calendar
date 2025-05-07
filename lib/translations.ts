@@ -81,7 +81,7 @@ export const translations: Translations = {
     // Page d'accueil
     "todaysPhrase": "Ma petite question du jour",
     "todaysQuestion": "Ma petite question du jour",
-    "mainPageTitle": "Ma petite question",
+    "mainPageTitle": "Ma Petite Question",
     "yourResponse": "Votre réponse",
     "writeYourThoughts": "Écrivez vos réflexions sur la question du jour...",
     "writePlaceholder": "Écrivez vos réflexions sur la question du jour...",

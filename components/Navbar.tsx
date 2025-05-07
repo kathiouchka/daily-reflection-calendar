@@ -58,18 +58,12 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center" aria-label="Accueil">
-            {/* Logo SVG stylisé */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 40 40"
-              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-indigo-600 dark:text-indigo-400 mr-2"
-              fill="none"
-            >
-              <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="3" fill="white" className="dark:fill-slate-800" />
-              <text x="50%" y="56%" textAnchor="middle" fontFamily="Permanent Marker, cursive" fontSize="18" fill="currentColor" dy=".3em">
-                ?
-              </text>
-            </svg>
+            {/* Replace SVG with Image component */}
+            <img 
+              src="/question_simple_logo.png" 
+              alt="Ma petite question logo"
+              className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-indigo-600 dark:text-indigo-400 mr-2"
+            />
           </Link>
           <div className="flex items-center space-x-6">
             {session ? (

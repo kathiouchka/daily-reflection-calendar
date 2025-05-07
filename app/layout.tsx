@@ -9,6 +9,15 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   title: 'Ma petite question',
   description: 'Une application pour écrire des souvenirs quotidiens',
+  icons: {
+    icon: [
+      { url: '/question_simple_logo.png', sizes: 'any', type: 'image/png' }, // General purpose
+      { url: '/question_simple_logo.png', sizes: '16x16', type: 'image/png' },
+      { url: '/question_simple_logo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/question_simple_logo.png', sizes: '48x48', type: 'image/png' },
+    ],
+    apple: '/question_simple_logo.png', // For Apple touch icon
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
