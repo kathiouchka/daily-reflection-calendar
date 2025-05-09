@@ -1,7 +1,7 @@
 // app/calendar/page.tsx
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { format, startOfMonth, endOfMonth, startOfWeek, addDays, isSameMonth, isSameDay, subMonths, addMonths, addYears, subDays } from "date-fns";
 import { fr as frLocale, enUS as enUSLocale } from 'date-fns/locale'; // Import locales
@@ -49,15 +49,31 @@ export default function CalendarPage() {
   const [responses, setResponses] = useState<{ [date: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCalendarModal, setIsLoadingCalendarModal] = useState(false); // Loading state for modal calendar
+  const [showDelayedGlobalLoader, setShowDelayedGlobalLoader] = useState(false);
+  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [calendarDisplayMonth, setCalendarDisplayMonth] = useState(startOfMonth(selectedDate));
 
   useEffect(() => {
-    if (!session || !selectedDate) return;
+    let isMounted = true;
 
     async function fetchDataForDayAcrossYears() {
-      setIsLoading(true);
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+      }
+      if (isMounted) setShowDelayedGlobalLoader(false);
+
+      if (isMounted) setIsLoading(true);
+
+      loadingTimerRef.current = setTimeout(() => {
+        if (isMounted) { // Check isMounted before setting state
+          // We can also check a ref for isLoading here if it becomes complex,
+          // but the finally block should handle cleanup correctly.
+          setShowDelayedGlobalLoader(true);
+        }
+      }, 300); // 300ms delay
+
       let newPhrasesData = {};
       let newResponsesData = {};
 
@@ -102,11 +118,37 @@ export default function CalendarPage() {
       } catch (error) {
         console.error("Error fetching calendar data across years (main view)", error);
       } finally {
-        setIsLoading(false);
+        if (loadingTimerRef.current) {
+          clearTimeout(loadingTimerRef.current);
+          loadingTimerRef.current = null;
+        }
+        if (isMounted) {
+          setIsLoading(false);
+          setShowDelayedGlobalLoader(false);
+        }
       }
     }
 
-    fetchDataForDayAcrossYears();
+    if (session && selectedDate) {
+      fetchDataForDayAcrossYears();
+    } else {
+      // Reset loading states if no session or selectedDate
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+        loadingTimerRef.current = null;
+      }
+      if (isMounted) {
+        setIsLoading(false);
+        setShowDelayedGlobalLoader(false);
+      }
+    }
+
+    return () => {
+      isMounted = false;
+      if (loadingTimerRef.current) {
+        clearTimeout(loadingTimerRef.current);
+      }
+    };
   }, [selectedDate, session]);
 
   useEffect(() => {
@@ -334,7 +376,7 @@ export default function CalendarPage() {
           )}
           
           {/* General loading overlay for main view */}
-          {isLoading && (
+          {showDelayedGlobalLoader && (
             <div className="fixed top-4 right-4 z-20">
               <div className="flex items-center p-3 rounded-lg bg-white dark:bg-gray-700 shadow-lg">
                 <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-sage-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
