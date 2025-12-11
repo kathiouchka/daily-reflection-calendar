@@ -24,18 +24,23 @@ A full-stack web application where users sign in with Google, answer a daily ref
 
 ## Project Structure
 
-app/ – Application routes, layouts, and pages  
-components/ – Reusable UI components  
-lib/ – Shared utilities, Prisma client, helpers  
-prisma/ – Prisma schema, migrations, seed  
-public/ – Static assets  
-middleware.ts – Route protection based on authentication
+```app/            – Routes, pages, layouts
+components/     – Reusable UI components
+lib/            – Prisma client, utilities
+prisma/         – Schema, migrations, seed script
+public/         – Static assets
+middleware.ts   – Route protection middleware
+```
 
-Data model (simplified):
-User – profile and auth metadata  
-Phrase – daily questions  
-UserResponse – user answers  
-Account and Session – managed by NextAuth
+## Data model (simplified):
+```
+User           – Profile and auth metadata
+Phrase         – Daily questions
+UserResponse   – Answers from authenticated users
+Account        – NextAuth OAuth accounts
+Session        – NextAuth sessions
+
+```
 
 ## Prerequisites
 
@@ -57,26 +62,33 @@ npm install
 3. Create a .env.local file with the following variables (example):
 
 Development:
-DATABASE_URL="file:./dev.db"  
-NEXTAUTH_URL="http://localhost:3000"  
-NEXTAUTH_SECRET="your-secret-key"  
-GOOGLE_CLIENT_ID="your-google-client-id"  
+```DATABASE_URL="file:./dev.db"
+
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key"
+
+GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
+```
 
 Production:
-DATABASE_URL="your-supabase-connection-string"  
-NEXTAUTH_URL="https://your-domain.com"  
-NEXTAUTH_SECRET="your-production-secret"  
-GOOGLE_CLIENT_ID="your-google-client-id"  
+```DATABASE_URL="your-supabase-connection-string"
+
+NEXTAUTH_URL="https://your-domain.com"
+NEXTAUTH_SECRET="your-production-secret"
+
+GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
+```
 
 4. Set up the database  
-npm run prisma:generate  
-npm run prisma:migrate  
+```npm run prisma:generate
+npm run prisma:migrate
 npm run seed
+```
 
 5. Start the development server  
-npm run dev
+`npm run dev`
 
 The application will be available at:  
 http://localhost:3000
