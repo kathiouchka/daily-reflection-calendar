@@ -1,152 +1,128 @@
-# Ma Petite Question
+# Daily Reflection Calendar
 
-Une application web qui présente aux utilisateurs une question quotidienne de réflexion. Les utilisateurs peuvent répondre aux questions du jour et consulter leurs réponses dans un format calendrier.
+A full-stack web application where users sign in with Google, answer a daily reflection question, and view their past answers through a calendar interface.
 
-## Fonctionnalités
+## Features
 
-- 🔐 Authentification Google
-- 📅 Vue calendrier des questions et réponses quotidiennes
-- 💭 Questions de réflexion quotidiennes en français
-- 🌓 Mode clair/sombre
-- 🔒 Routes protégées pour les utilisateurs authentifiés
+- Google authentication (NextAuth)
+- Daily reflection questions (in French)
+- Calendar view of previous answers
+- Light and dark mode
+- Protected routes for authenticated users
 
-## Stack Technique
+## Tech Stack
 
-- Next.js
+- Next.js (App Router) + React
 - TypeScript
-- Prisma avec Supabase (PostgreSQL)
-- NextAuth.js
+- Prisma ORM
+- SQLite (development)
+- Supabase / PostgreSQL (production)
+- NextAuth.js (Google OAuth)
 - TailwindCSS
 - React Markdown
-- Vercel (Déploiement)
+- Deployment with Vercel
 
-## Prérequis
+## Project Structure
 
-- Node.js (dernière version LTS recommandée)
-- npm ou yarn
-- Identifiants Google OAuth (pour l'authentification)
-- Compte Supabase (pour la base de données en production)
-- Compte Vercel (pour le déploiement)
+app/ – Application routes, layouts, and pages  
+components/ – Reusable UI components  
+lib/ – Shared utilities, Prisma client, helpers  
+prisma/ – Prisma schema, migrations, seed  
+public/ – Static assets  
+middleware.ts – Route protection based on authentication
 
-## Instructions d'Installation
+Data model (simplified):
+User – profile and auth metadata  
+Phrase – daily questions  
+UserResponse – user answers  
+Account and Session – managed by NextAuth
 
-1. Cloner le dépôt :
-```bash
-git clone [your-repository-url]
-cd mapetitequestion
-```
+## Prerequisites
 
-2. Installer les dépendances :
-```bash
+- Node.js (latest LTS)
+- npm or yarn
+- Google OAuth credentials
+- Supabase account
+- Vercel account
+
+## Installation
+
+1. Clone the repository  
+git clone https://github.com/kathiouchka/daily-reflection-calendar.git  
+cd daily-reflection-calendar
+
+2. Install dependencies  
 npm install
-```
 
-3. Configuration des variables d'environnement :
-Créer un fichier `.env.local` avec les variables suivantes :
+3. Create a .env.local file with the following variables (example):
 
-Pour le développement :
-```env
-# Database (Development)
-DATABASE_URL="file:./dev.db"
-
-# NextAuth
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key"
-
-# Google OAuth
-GOOGLE_CLIENT_ID="your-google-client-id"
+Development:
+DATABASE_URL="file:./dev.db"  
+NEXTAUTH_URL="http://localhost:3000"  
+NEXTAUTH_SECRET="your-secret-key"  
+GOOGLE_CLIENT_ID="your-google-client-id"  
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
-```
 
-Pour la production :
-```env
-# Database (Production)
-DATABASE_URL="your-supabase-connection-string"
-
-# NextAuth
-NEXTAUTH_URL="https://your-domain.com"
-NEXTAUTH_SECRET="your-production-secret"
-
-# Google OAuth
-GOOGLE_CLIENT_ID="your-google-client-id"
+Production:
+DATABASE_URL="your-supabase-connection-string"  
+NEXTAUTH_URL="https://your-domain.com"  
+NEXTAUTH_SECRET="your-production-secret"  
+GOOGLE_CLIENT_ID="your-google-client-id"  
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
-```
 
-4. Configuration de la base de données :
-```bash
-# Générer le client Prisma
-npm run prisma:generate
-
-# Exécuter les migrations
-npm run prisma:migrate
-
-# Peupler la base de données
+4. Set up the database  
+npm run prisma:generate  
+npm run prisma:migrate  
 npm run seed
-```
 
-5. Démarrer le serveur de développement :
-```bash
+5. Start the development server  
 npm run dev
-```
 
-L'application sera disponible sur `http://localhost:3000`
+The application will be available at:  
+http://localhost:3000
 
-## Déploiement
+## Deployment
 
-### Supabase (Base de données)
+### Supabase (database)
 
-1. Créer un projet sur [Supabase](https://supabase.com)
-2. Obtenir la chaîne de connexion PostgreSQL
-3. Mettre à jour la variable `DATABASE_URL` dans les paramètres de Vercel
+1. Create a project at https://supabase.com  
+2. Copy the PostgreSQL connection string  
+3. Add DATABASE_URL to Vercel environment variables
 
-### Vercel (Hébergement)
+### Vercel (hosting)
 
-1. Pusher votre code sur GitHub
-2. Connecter votre dépôt à [Vercel](https://vercel.com)
-3. Configurer les variables d'environnement dans Vercel
-4. Déployer !
+1. Push the repository to GitHub  
+2. Connect it to https://vercel.com  
+3. Configure environment variables  
+4. Deploy
 
-## Structure de la Base de Données
+## Available Scripts
 
-L'application utilise les modèles suivants :
-- `User`: Informations utilisateur et authentification
-- `Phrase`: Questions quotidiennes
-- `UserResponse`: Réponses des utilisateurs
-- `Account` & `Session`: Gestion de l'authentification NextAuth.js
+npm run dev – Start development server  
+npm run build – Build the application  
+npm run prisma:migrate – Run migrations  
+npm run prisma:generate – Generate Prisma client  
+npm run seed – Seed the database
 
-## Scripts Disponibles
+## Authentication Guide
 
-- `npm run dev`: Démarre le serveur de développement
-- `npm run build`: Compile l'application
-- `npm run prisma:migrate`: Exécute les migrations de la base de données
-- `npm run prisma:generate`: Génère le client Prisma
-- `npm run seed`: Peuple la base de données avec les questions
+Google OAuth redirect URIs:
 
-## Authentification
+Development:  
+http://localhost:3000/api/auth/callback/google
 
-L'application utilise Google OAuth. Configuration :
+Production:  
+https://your-domain.com/api/auth/callback/google
 
-1. Aller sur la [Console Google Cloud](https://console.cloud.google.com/)
-2. Créer un nouveau projet
-3. Activer l'API Google OAuth
-4. Créer des identifiants (ID client OAuth)
-5. Ajouter les URIs de redirection autorisés :
-   - Développement : `http://localhost:3000/api/auth/callback/google`
-   - Production : `https://[votre-domaine]/api/auth/callback/google`
+## Development Notes
 
-## Notes de Développement
+- SQLite is used for development  
+- Supabase/PostgreSQL is used for production  
+- Environment variables must be configured locally and on Vercel  
+- The seed script fills the database with French reflection questions  
 
-- L'application utilise SQLite en développement et PostgreSQL (Supabase) en production
-- Les variables d'environnement doivent être correctement configurées
-- Le script seed peuple la base de données avec des questions en français
-- Le déploiement est automatisé via Vercel
+## Contributing
 
-## Contribution
-
-1. Créer une nouvelle branche pour votre fonctionnalité
-2. Effectuer vos modifications
-3. Soumettre une pull request
-
-## License
-
-[Votre Licence] 
+1. Create a feature branch  
+2. Commit your changes  
+3. Open a pull request 
